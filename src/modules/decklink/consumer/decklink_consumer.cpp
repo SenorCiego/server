@@ -737,7 +737,8 @@ struct decklink_consumer final : public IDeckLinkVideoOutputCallback
         if (config.vanc.enable) {
             BOOL flag = TRUE;
             attributes_->GetFlag(BMDDeckLinkVANCRequires10BitYUVVideoFrames, &flag);
-            if (flag) {
+            const bool is_10bit_yuv = config.hdr || config.pixel_format == configuration::pixel_format_t::yuv;
+            if (flag && !is_10bit_yuv) {
                 CASPAR_LOG(warning) << print()
                                     << L" DeckLink hardware only supports VANC when the active picture and ancillary "
                                        L"data are both 10-bit YUV pixel format.";
@@ -1130,6 +1131,10 @@ struct decklink_consumer final : public IDeckLinkVideoOutputCallback
     bool call(const std::vector<std::wstring>& params)
     {
         try {
+            if (!vanc_) {
+                CASPAR_LOG(warning) << print() << L" VANC is not enabled on this output.";
+                return false;
+            }
             bool result = vanc_->try_push_data(params);
             if (!result) {
                 CASPAR_LOG(warning) << print() << L" Unknown command: " << (params.empty() ? L"N/A" : params[0]);
