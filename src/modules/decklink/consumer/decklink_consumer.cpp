@@ -17,7 +17,7 @@
  * along with CasparCG. If not, see <http://www.gnu.org/licenses/>.
  *
  * Author: Robert Nagy, ronag89@gmail.com
- * Author: Julian Waller, julian@superfly.tv
+ * Author: Julian Waller, julian@superfly.tv 
  */
 
 #include "../StdAfx.h"
